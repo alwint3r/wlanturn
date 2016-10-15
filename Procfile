@@ -1,2 +1,2 @@
 web: cd static && npm start
-api: node index.js
+api: nodemon index.js
