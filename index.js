@@ -9,6 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.use(`/api`, require(`./middlewares/api`));
 
 app.listen(config.http.port, () => {
 
