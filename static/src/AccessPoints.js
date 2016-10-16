@@ -1,24 +1,14 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
+import { connect } from 'react-redux';
 
 import './App.css';
 import AccessPointTable from './AccessPointTable';
+import actions from './actions';
 
 /* eslint react/jsx-boolean-value:0 */
-
-const apMock = [
-  {
-    ssid: `X`,
-    freq: `2412 MHz`,
-    rate: `54 MB/s`,
-    signal: `100`,
-    security: `WPA2`,
-    active: `no`,
-  },
-];
-
-const AccessPoints = () => (
+const AccessPoints = props => (
   <Paper zDepth={1}>
     <div className="paper-inner">
       <h3> Available Access Point(s) </h3>
@@ -27,11 +17,27 @@ const AccessPoints = () => (
       </div>
 
       <AccessPointTable
+        onRowSelection={props.handleSelection}
         style={{ marginTop: 15 }}
-        access_points={apMock}
+        access_points={props.access_points}
       />
     </div>
   </Paper>
 );
 
-export default AccessPoints;
+AccessPoints.propTypes = {
+  handleSelection: React.PropTypes.func,
+  access_points: React.PropTypes.arrayOf(`object`),
+};
+
+const mapStateToProps = state => ({
+  access_points: state.access_points,
+});
+
+const mapDispatchToProps = dispatch => ({
+  handleSelection(idx) {
+    dispatch(actions.toggleConnectDialog(idx));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccessPoints);

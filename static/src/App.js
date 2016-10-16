@@ -4,12 +4,14 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import { connect } from 'react-redux';
 
 import './App.css';
 import AccessPoints from './AccessPoints';
 import ActiveConnection from './ActiveConnection';
 import ConnectDialog from './ConnectDialog';
 import ChangePasswordDialog from './ChangePasswordDialog';
+import actions from './actions';
 
 const App = props => (
   <div className="App">
@@ -25,7 +27,10 @@ const App = props => (
           targetOrigin={{ horizontal: `right`, vertical: `top` }}
           anchorOrigin={{ horizontal: `right`, vertical: `top` }}
         >
-          <MenuItem primaryText="Change Password" />
+          <MenuItem
+            primaryText="Change Password"
+            onTouchTap={props.changePasswordShow}
+          />
           <MenuItem primaryText="Log Out" />
         </IconMenu>
       }
@@ -50,6 +55,18 @@ const App = props => (
 App.propTypes = {
   connectDialogOpen: React.PropTypes.bool,
   changePasswordDialogOpen: React.PropTypes.bool,
+  changePasswordShow: React.PropTypes.func,
 };
 
-export default App;
+const mapStateToProps = state => ({
+  connectDialogOpen: state.connectDialogOpen,
+  changePasswordDialogOpen: state.changePasswordDialogOpen,
+});
+
+const mapDispatchToProps = dispatch => ({
+  changePasswordShow() {
+    dispatch(actions.toggleChangePassDialog());
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

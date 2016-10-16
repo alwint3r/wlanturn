@@ -5,7 +5,7 @@ import {
   TableHeader,
   TableHeaderColumn,
   TableRow,
-  TableRowColumn
+  TableRowColumn,
 } from 'material-ui/Table';
 
 import './App.css';
@@ -13,8 +13,8 @@ import './App.css';
 /* eslint react/jsx-boolean-value:0 */
 
 
-const AccessPointTable = (props) => (
-  <Table onRowSelection={props.onRowSelection}>
+const AccessPointTable = props => (
+  <Table onCellClick={props.onRowSelection}>
     <TableHeader>
       <TableRow>
         <TableHeaderColumn>SSID</TableHeaderColumn>
@@ -26,15 +26,15 @@ const AccessPointTable = (props) => (
       </TableRow>
     </TableHeader>
     <TableBody>
-    {props.access_points.map(ap => (
-    <TableRow>
-      <TableRowColumn>{ap.ssid}</TableRowColumn>
-      <TableRowColumn>{ap.freq}</TableRowColumn>
-      <TableRowColumn>{ap.security}</TableRowColumn>
-      <TableRowColumn>{ap.rate}</TableRowColumn>
-      <TableRowColumn>{ap.signal}</TableRowColumn>
-      <TableRowColumn>{ap.active}</TableRowColumn>
-    </TableRow>
+      {props.access_points.map(ap => (
+        <TableRow>
+          <TableRowColumn>{ap.ssid}</TableRowColumn>
+          <TableRowColumn>{ap.freq}</TableRowColumn>
+          <TableRowColumn>{ap.security}</TableRowColumn>
+          <TableRowColumn>{ap.rate}</TableRowColumn>
+          <TableRowColumn>{ap.signal}</TableRowColumn>
+          <TableRowColumn>{ap.active}</TableRowColumn>
+        </TableRow>
     ))}
     </TableBody>
   </Table>
@@ -42,7 +42,7 @@ const AccessPointTable = (props) => (
 
 AccessPointTable.propTypes = {
   onRowSelection: React.PropTypes.func,
-  access_points: React.PropTypes.array,
+  access_points: React.PropTypes.arrayOf(`object`),
 };
 
 export default AccessPointTable;

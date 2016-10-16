@@ -2,6 +2,9 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import { connect } from 'react-redux';
+
+import actions from './actions';
 
 /* eslint react/jsx-boolean-value:0 */
 
@@ -20,7 +23,7 @@ const ConnectDialog = props => (
         onTouchTap={props.handleSubmit}
       />,
     ]}
-    modal={false}
+    modal={true}
     onRequestClose={props.handleClose}
     open={props.open}
     autoScrollBodyContent={true}
@@ -57,4 +60,15 @@ ConnectDialog.propTypes = {
   onPasswordChange: React.PropTypes.func,
 };
 
-export default ConnectDialog;
+const mapStateToProps = state => ({
+  password: state.connect.password,
+  ssidValue: state.connect.ssidValue,
+});
+
+const mapDispatchToProps = dispatch => ({
+  handleClose() {
+    dispatch(actions.toggleConnectDialog(`connect`));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectDialog);

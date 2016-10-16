@@ -2,6 +2,9 @@ import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import { connect } from 'react-redux';
+
+import actions from './actions';
 
 /* eslint react/jsx-boolean-value:0 */
 
@@ -70,4 +73,16 @@ ChangePasswordDialog.propTypes = {
   onConfirmNewPasswordChange: React.PropTypes.func,
 };
 
-export default ChangePasswordDialog;
+const mapStateToProps = state => ({
+  oldPassword: state.changePassword.oldPassword,
+  newPassword: state.changePassword.newPassword,
+  confirmNewPassword: state.changePassword.confirmNewPassword,
+});
+
+const mapDispatchToProps = dispatch => ({
+  handleClose() {
+    dispatch(actions.toggleChangePassDialog());
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePasswordDialog);
