@@ -17,4 +17,16 @@ router.get(`/active_connection/:iface`, (req, res) =>
  res.json(nmcli.activeConnectionOnIface(req.params.iface))
 );
 
+router.post(`/connect`, (req, res) =>
+  res.json({
+    connected: nmcli.connect(req.body.ssid, req.body.password),
+  })
+);
+
+router.post(`/disconnect`, (req, res) =>
+  res.json({
+    disconnected: nmcli.disconnect(req.body.iface),
+  })
+);
+
 module.exports = router;
