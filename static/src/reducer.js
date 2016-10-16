@@ -29,6 +29,11 @@ export default function reducer(state = defaultState, action) {
         };
       }
 
+      if (state.access_points[action.index]
+        && state.access_points[action.index].active === `yes`) {
+        return state;
+      }
+
       return {
         ...state,
         connect: {
