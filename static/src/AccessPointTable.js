@@ -1,5 +1,4 @@
 import React from 'react';
-import Paper from 'material-ui/Paper';
 import {
   Table,
   TableBody,
@@ -42,7 +41,7 @@ const AccessPointTable = (props) => (
 );
 
 AccessPointTable.propTypes = {
-  onRowSelection: React.PropTypes.function,
+  onRowSelection: React.PropTypes.func,
   access_points: React.PropTypes.array,
 };
 
