@@ -20,7 +20,6 @@ const App = props => (
       showMenuIconButton={false}
       iconElementRight={
         <IconMenu
-          {...props}
           iconButtonElement={
             <IconButton><MoreVertIcon /></IconButton>
           }
