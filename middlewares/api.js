@@ -17,6 +17,16 @@ router.get(`/active_connection/:iface`, (req, res) =>
  res.json(nmcli.activeConnectionOnIface(req.params.iface))
 );
 
+router.get(`/wifi_active_connections`, (req, res) => {
+  const devices = nmcli.listWirelessDevice()
+    .filter(dev => dev.state === `connected`)
+    .map(dev => dev.device);
+
+  return res.json({
+    active_connections: devices.map(dev => nmcli.activeConnectionOnIface(dev)),
+  });
+});
+
 router.post(`/connect`, (req, res) =>
   res.json({
     connected: nmcli.connect(req.body.ssid, req.body.password),

@@ -28,4 +28,14 @@ export default {
 
     promiseProducer: () => fetch(`api/access_points`).then(res => res.json()),
   }),
+
+  getActiveConnections: () => ({
+    types: [
+      `ACTIVECONNECTION_REQUEST`,
+      `ACTIVECONNECTION_SUCCESS`,
+      `ACTIVECONNECTION_ERROR`,
+    ],
+
+    promiseProducer: () => fetch(`api/wifi_active_connections`).then(res => res.json()),
+  }),
 };

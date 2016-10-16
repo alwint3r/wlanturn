@@ -11,8 +11,8 @@ const defaultState = {
     password: ``,
     ssidValue: ``,
   },
-  access_points: [
-  ],
+  access_points: [],
+  active_connections: [],
 };
 
 export default function reducer(state = defaultState, action) {
@@ -92,6 +92,26 @@ export default function reducer(state = defaultState, action) {
       return {
         ...state,
         access_points: [],
+      };
+
+    case `ACTIVECONNECTION_REQUSET`:
+      return {
+        ...state,
+      };
+
+    case `ACTIVECONNECTION_SUCCESS`:
+      return {
+        ...state,
+        active_connections: action.result.active_connections.map(con => ({
+          ip: con[`IP4.ADDRESS[1]`],
+          name: con[`GENERAL.NAME`],
+          interface: con[`GENERAL.DEVICES`],
+        })),
+      };
+    case `ACTIVECONNECTION_ERROR`:
+      return {
+        ...state,
+        active_connections: [],
       };
     default:
       return state;

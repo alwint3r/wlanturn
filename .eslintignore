@@ -4,3 +4,5 @@ npm-debug.*
 
 !config/index.js
 config/
+build/
+*test*.js
