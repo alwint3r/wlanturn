@@ -18,4 +18,14 @@ export default {
     fieldName,
     value,
   }),
+
+  rescan: () => ({
+    types: [
+      `RESCAN_REQUEST`,
+      `RESCAN_SUCCESS`,
+      `RESCAN_ERROR`,
+    ],
+
+    promiseProducer: () => fetch(`api/access_points`).then(res => res.json()),
+  }),
 };

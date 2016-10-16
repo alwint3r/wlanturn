@@ -13,7 +13,7 @@ const AccessPoints = props => (
     <div className="paper-inner">
       <h3> Available Access Point(s) </h3>
       <div style={{ marginBottom: 10, textAlign: `right` }}>
-        <RaisedButton label="Re-scan" primary={true} />
+        <RaisedButton label="Re-scan" primary={true} onTouchTap={props.doRescan} />
       </div>
 
       <AccessPointTable
@@ -27,7 +27,8 @@ const AccessPoints = props => (
 
 AccessPoints.propTypes = {
   handleSelection: React.PropTypes.func,
-  access_points: React.PropTypes.arrayOf(`object`),
+  access_points: React.PropTypes.arrayOf(React.PropTypes.object),
+  doRescan: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -37,6 +38,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   handleSelection(idx) {
     dispatch(actions.toggleConnectDialog(idx));
+  },
+
+  doRescan() {
+    dispatch(actions.rescan());
   },
 });
 

@@ -12,14 +12,6 @@ const defaultState = {
     ssidValue: ``,
   },
   access_points: [
-    {
-      ssid: `X`,
-      freq: `2412 MHz`,
-      rate: `54 MB/s`,
-      signal: `100`,
-      security: `WPA2`,
-      active: `no`,
-    },
   ],
 };
 
@@ -79,6 +71,22 @@ export default function reducer(state = defaultState, action) {
           ...state.changePassword,
           [action.fieldName]: action.value,
         },
+      };
+
+    case `RESCAN_REQUSET`:
+      return {
+        ...state,
+      };
+
+    case `RESCAN_SUCCESS`:
+      return {
+        ...state,
+        access_points: action.result,
+      };
+    case `RESCAN_ERROR`:
+      return {
+        ...state,
+        access_points: [],
       };
     default:
       return state;

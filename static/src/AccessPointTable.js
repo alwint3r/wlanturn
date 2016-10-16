@@ -27,7 +27,7 @@ const AccessPointTable = props => (
     </TableHeader>
     <TableBody>
       {props.access_points.map(ap => (
-        <TableRow>
+        <TableRow key={`${ap.ssid}-${Date.now}`}>
           <TableRowColumn>{ap.ssid}</TableRowColumn>
           <TableRowColumn>{ap.freq}</TableRowColumn>
           <TableRowColumn>{ap.security}</TableRowColumn>
@@ -42,7 +42,7 @@ const AccessPointTable = props => (
 
 AccessPointTable.propTypes = {
   onRowSelection: React.PropTypes.func,
-  access_points: React.PropTypes.arrayOf(`object`),
+  access_points: React.PropTypes.arrayOf(React.PropTypes.object),
 };
 
 export default AccessPointTable;

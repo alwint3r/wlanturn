@@ -24,21 +24,20 @@ const ActiveConnection = () => (
 
       <div>
         {connectionMock.map(conn => (
-        <div style={{ marginTop: 5, marginBottom: 20 }}>
-          <ConnectionInfoTable
-            name={conn.name}
-            interface={conn.interface}
-            ip={conn.ip}
-          />
+          <div style={{ marginTop: 5, marginBottom: 20 }} key={conn.interface}>
+            <ConnectionInfoTable
+              name={conn.name}
+              interface={conn.interface}
+              ip={conn.ip}
+            />
 
-          <RaisedButton
-            label="Disconnect"
-            danger={true}
-            fullWidth={true}
-            secondary={true}
-            style={{ marginTop: 15 }}
-          />
-        </div>
+            <RaisedButton
+              label="Disconnect"
+              fullWidth={true}
+              secondary={true}
+              style={{ marginTop: 15 }}
+            />
+          </div>
         ))}
       </div>
     </div>
