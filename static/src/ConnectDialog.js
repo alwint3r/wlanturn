@@ -69,6 +69,9 @@ const mapDispatchToProps = dispatch => ({
   handleClose() {
     dispatch(actions.toggleConnectDialog(`connect`));
   },
+  onPasswordChange(event) {
+    dispatch(actions.connectPasswordChange(event.target.value));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ConnectDialog);

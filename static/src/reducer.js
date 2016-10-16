@@ -62,6 +62,24 @@ export default function reducer(state = defaultState, action) {
         ...state,
         changePasswordDialogOpen: true,
       };
+
+    case `CONNECT_PASSWORD_VALUE_CHANGED`:
+      return {
+        ...state,
+        connect: {
+          ...state.connect,
+          password: action.value,
+        },
+      };
+
+    case `CHANGEPASS_VALUE_CHANGED`:
+      return {
+        ...state,
+        changePassword: {
+          ...state.changePassword,
+          [action.fieldName]: action.value,
+        },
+      };
     default:
       return state;
   }
