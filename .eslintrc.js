@@ -8,10 +8,12 @@ module.exports = {
     ],
     "env": {
       "node": true,
+      "browser": true,
     },
     "rules": {
       "quotes": [1, "backtick"],
       "strict": 0,
       "import/no-dynamic-require": 0,
+      "react/jsx-filename-extension": 0,
     },
 };
