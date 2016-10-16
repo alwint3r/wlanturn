@@ -8,22 +8,30 @@ import AccessPointTable from './AccessPointTable';
 import actions from './actions';
 
 /* eslint react/jsx-boolean-value:0 */
-const AccessPoints = props => (
-  <Paper zDepth={1}>
-    <div className="paper-inner">
-      <h3> Available Access Point(s) </h3>
-      <div style={{ marginBottom: 10, textAlign: `right` }}>
-        <RaisedButton label="Re-scan" primary={true} onTouchTap={props.doRescan} />
-      </div>
+class AccessPoints extends React.Component {
+  componentWillMount() {
+    this.props.doRescan();
+  }
 
-      <AccessPointTable
-        onRowSelection={props.handleSelection}
-        style={{ marginTop: 15 }}
-        access_points={props.access_points}
-      />
-    </div>
-  </Paper>
-);
+  render() {
+    return (
+      <Paper zDepth={1}>
+        <div className="paper-inner">
+          <h3> Available Access Point(s) </h3>
+          <div style={{ marginBottom: 10, textAlign: `right` }}>
+            <RaisedButton label="Re-scan" primary={true} onTouchTap={this.props.doRescan} />
+          </div>
+
+          <AccessPointTable
+            onRowSelection={this.props.handleSelection}
+            style={{ marginTop: 15 }}
+            access_points={this.props.access_points}
+          />
+        </div>
+      </Paper>
+    );
+  }
+}
 
 AccessPoints.propTypes = {
   handleSelection: React.PropTypes.func,
