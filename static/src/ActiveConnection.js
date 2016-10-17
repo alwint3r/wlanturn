@@ -17,7 +17,7 @@ class ActiveConnection extends React.Component {
 
   render() {
     return (
-      <Paper zDepth={1}>
+      <Paper zDepth={1} style={{ marginBottom: 10 }}>
         <div className="paper-inner">
           <div style={{ marginBottom: 10 }}>
             <h3>Active Connection(s)</h3>

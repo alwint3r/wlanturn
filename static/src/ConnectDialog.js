@@ -1,5 +1,6 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
+import Checkbox from 'material-ui/Checkbox';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import { connect } from 'react-redux';
@@ -35,8 +36,8 @@ const ConnectDialog = props => (
         value={props.ssidValue}
         id="ssid-value"
         floatingLabelText="SSID"
-        disabled={true}
         fullWidth={true}
+        disabled={true}
       />
       <TextField
         value={props.password}
@@ -46,6 +47,13 @@ const ConnectDialog = props => (
         onChange={props.onPasswordChange}
         type="password"
         fullWidth={true}
+      />
+
+      <Checkbox
+        label="Force Connect"
+        style={{ marginBottom: 10, marginTop: 10 }}
+        checked={props.force}
+        onCheck={props.onForceChecked}
       />
     </div>
   </Dialog>
@@ -58,11 +66,14 @@ ConnectDialog.propTypes = {
   ssidValue: React.PropTypes.string,
   handleSubmit: React.PropTypes.func,
   onPasswordChange: React.PropTypes.func,
+  onForceChecked: React.PropTypes.func,
+  force: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   password: state.connect.password,
   ssidValue: state.connect.ssidValue,
+  force: state.connect.force,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -71,6 +82,12 @@ const mapDispatchToProps = dispatch => ({
   },
   onPasswordChange(event) {
     dispatch(actions.connectPasswordChange(event.target.value));
+  },
+  onForceChecked(event, value) {
+    dispatch(actions.checkForceConnect(value));
+  },
+  handleSubmit() {
+    dispatch(actions.connectWifi());
   },
 });
 

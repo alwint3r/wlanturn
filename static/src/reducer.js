@@ -10,6 +10,7 @@ const defaultState = {
   connect: {
     password: ``,
     ssidValue: ``,
+    force: false,
   },
   access_points: [],
   active_connections: [],
@@ -66,6 +67,15 @@ export default function reducer(state = defaultState, action) {
         connect: {
           ...state.connect,
           password: action.value,
+        },
+      };
+
+    case `CONNECT_FORCE_CHECKED`:
+      return {
+        ...state,
+        connect: {
+          ...state.connect,
+          force: action.value,
         },
       };
 

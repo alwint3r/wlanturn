@@ -29,7 +29,7 @@ router.get(`/wifi_active_connections`, (req, res) => {
 
 router.post(`/connect`, (req, res) =>
   res.json({
-    connected: nmcli.connect(req.body.ssid, req.body.password),
+    connected: nmcli.connect(req.body.ssid, req.body.password, req.body.force),
   })
 );
 

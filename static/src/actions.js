@@ -13,6 +13,11 @@ export default {
     value,
   }),
 
+  checkForceConnect: value => ({
+    type: `CONNECT_FORCE_CHECKED`,
+    value,
+  }),
+
   changePassFieldChange: (fieldName, value) => ({
     type: `CHANGEPASS_VALUE_CHANGED`,
     fieldName,
@@ -37,5 +42,31 @@ export default {
     ],
 
     promiseProducer: () => fetch(`api/wifi_active_connections`).then(res => res.json()),
+  }),
+
+  connectWifi: () => ({
+    types: [
+      `CONNECTWIFI_REQUEST`,
+      `CONNECTWIFI_SUCCESS`,
+      `CONNECTWIFI_ERROR`,
+    ],
+
+    promiseProducer: (store) => {
+      const state = store.getState();
+      const body = JSON.stringify({
+        ssid: state.connect.ssidValue,
+        password: state.connect.password,
+        force: state.connect.force,
+      });
+
+      return fetch(`api/connect`, {
+        method: `POST`,
+        headers: {
+          'Content-Type': `application/json`,
+        },
+        body,
+      })
+      .then(res => res.json());
+    },
   }),
 };
