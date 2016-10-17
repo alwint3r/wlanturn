@@ -30,7 +30,10 @@ const App = props => (
             primaryText="Change Password"
             onTouchTap={props.changePasswordShow}
           />
-          <MenuItem primaryText="Log Out" />
+          <MenuItem
+            primaryText="Log Out"
+            onTouchTap={props.logout}
+          />
         </IconMenu>
       }
     />
@@ -55,6 +58,7 @@ App.propTypes = {
   connectDialogOpen: React.PropTypes.bool,
   changePasswordDialogOpen: React.PropTypes.bool,
   changePasswordShow: React.PropTypes.func,
+  logout: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -65,6 +69,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   changePasswordShow() {
     dispatch(actions.toggleChangePassDialog());
+  },
+
+  logout() {
+    dispatch(actions.logout());
   },
 });
 

@@ -15,6 +15,7 @@ const defaultState = {
   shouldRescan: false,
   access_points: [],
   active_connections: [],
+  loggedIn: false,
 };
 
 export default function reducer(state = defaultState, action) {
@@ -163,6 +164,22 @@ export default function reducer(state = defaultState, action) {
       return {
         ...state,
         shouldRescan: false,
+      };
+
+    case `LOGOUT_REQUEST`:
+      return {
+        ...state,
+      };
+
+    case `LOGOUT_SUCCESS`:
+      return {
+        ...state,
+        loggedIn: false,
+      };
+
+    case `LOGOUT_ERROR`:
+      return {
+        ...state,
       };
 
     default:
