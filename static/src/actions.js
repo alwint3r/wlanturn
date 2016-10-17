@@ -69,4 +69,26 @@ export default {
       .then(res => res.json());
     },
   }),
+
+  disconnect: iface => ({
+    types: [
+      `DISCONNECT_REQUEST`,
+      `DISCONNECT_SUCCESS`,
+      `DISCONNECT_ERROR`,
+    ],
+
+    promiseProducer: () => {
+      const body = JSON.stringify({
+        iface,
+      });
+
+      return fetch(`/api/disconnect`, {
+        method: `POST`,
+        headers: {
+          'Content-Type': `application/json`,
+        },
+        body,
+      }).then(res => res.json());
+    },
+  }),
 };

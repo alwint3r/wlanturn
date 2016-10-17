@@ -15,6 +15,10 @@ class ActiveConnection extends React.Component {
     this.props.getActiveConnections();
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.props.rescan(nextProps.shouldRescan);
+  }
+
   render() {
     return (
       <Paper zDepth={1} style={{ marginBottom: 10 }}>
@@ -37,6 +41,7 @@ class ActiveConnection extends React.Component {
                   fullWidth={true}
                   secondary={true}
                   style={{ marginTop: 15 }}
+                  onTouchTap={this.props.disconnectIface(conn.interface)}
                 />
               </div>
             ))}
@@ -50,15 +55,32 @@ class ActiveConnection extends React.Component {
 ActiveConnection.propTypes = {
   active_connections: React.PropTypes.arrayOf(React.PropTypes.object),
   getActiveConnections: React.PropTypes.func,
+  disconnectIface: React.PropTypes.func,
+  shouldRescan: React.PropTypes.bool,
+  rescan: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   active_connections: state.active_connections,
+  shouldRescan: state.shouldRescan,
 });
 
 const mapDispatchToPrps = dispatch => ({
   getActiveConnections() {
     dispatch(actions.getActiveConnections());
+  },
+
+  disconnectIface(iface) {
+    return () => {
+      dispatch(actions.disconnect(iface));
+    };
+  },
+
+  rescan(rescan) {
+    if (rescan) {
+      dispatch(actions.getActiveConnections());
+      dispatch(actions.rescan());
+    }
   },
 });
 

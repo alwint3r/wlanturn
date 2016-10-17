@@ -68,7 +68,7 @@ ConnectDialog.propTypes = {
   onPasswordChange: React.PropTypes.func,
   onForceChecked: React.PropTypes.func,
   force: React.PropTypes.bool,
-  rescan: React.PropTypes.bool,
+  rescan: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
@@ -93,7 +93,6 @@ const mapDispatchToProps = dispatch => ({
 
   rescan() {
     dispatch(actions.rescan());
-    dispatch(actions.getActiveConnections());
 
     return false;
   },

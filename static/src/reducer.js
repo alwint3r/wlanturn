@@ -12,6 +12,7 @@ const defaultState = {
     ssidValue: ``,
     force: false,
   },
+  shouldRescan: false,
   access_points: [],
   active_connections: [],
 };
@@ -91,17 +92,20 @@ export default function reducer(state = defaultState, action) {
     case `RESCAN_REQUSET`:
       return {
         ...state,
+        shouldRescan: false,
       };
 
     case `RESCAN_SUCCESS`:
       return {
         ...state,
         access_points: action.result,
+        shouldRescan: false,
       };
     case `RESCAN_ERROR`:
       return {
         ...state,
         access_points: [],
+        shouldRescan: false,
       };
 
     case `ACTIVECONNECTION_REQUSET`:
@@ -117,6 +121,7 @@ export default function reducer(state = defaultState, action) {
           name: con[`GENERAL.NAME`],
           interface: con[`GENERAL.DEVICES`],
         })),
+        shouldRescan: false,
       };
     case `ACTIVECONNECTION_ERROR`:
       return {
@@ -134,11 +139,30 @@ export default function reducer(state = defaultState, action) {
         ...state,
         connectDialogOpen: false,
         connect: defaultState.connect,
+        shouldRescan: true,
       };
 
     case `CONNECTWIFI_ERROR`:
       return {
         ...state,
+        shouldRescan: false,
+      };
+
+    case `DISCONNECT_REQUEST`:
+      return {
+        ...state,
+      };
+
+    case `DISCONNECT_SUCCESS`:
+      return {
+        ...state,
+        shouldRescan: true,
+      };
+
+    case `DISCONNECT_ERROR`:
+      return {
+        ...state,
+        shouldRescan: false,
       };
 
     default:
