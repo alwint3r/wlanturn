@@ -123,6 +123,24 @@ export default function reducer(state = defaultState, action) {
         ...state,
         active_connections: [],
       };
+
+    case `CONNECTWIFI_REQUEST`:
+      return {
+        ...state,
+      };
+
+    case `CONNECTWIFI_SUCCESS`:
+      return {
+        ...state,
+        connectDialogOpen: false,
+        connect: defaultState.connect,
+      };
+
+    case `CONNECTWIFI_ERROR`:
+      return {
+        ...state,
+      };
+
     default:
       return state;
   }

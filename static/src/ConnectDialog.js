@@ -26,7 +26,7 @@ const ConnectDialog = props => (
     ]}
     modal={true}
     onRequestClose={props.handleClose}
-    open={props.open}
+    open={(props.open ? props.open : props.rescan())}
     autoScrollBodyContent={true}
     title="Connect to Selected Access Point"
   >
@@ -68,6 +68,7 @@ ConnectDialog.propTypes = {
   onPasswordChange: React.PropTypes.func,
   onForceChecked: React.PropTypes.func,
   force: React.PropTypes.bool,
+  rescan: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
@@ -78,7 +79,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   handleClose() {
-    dispatch(actions.toggleConnectDialog(`connect`));
+    dispatch(actions.toggleConnectDialog());
   },
   onPasswordChange(event) {
     dispatch(actions.connectPasswordChange(event.target.value));
@@ -88,6 +89,13 @@ const mapDispatchToProps = dispatch => ({
   },
   handleSubmit() {
     dispatch(actions.connectWifi());
+  },
+
+  rescan() {
+    dispatch(actions.rescan());
+    dispatch(actions.getActiveConnections());
+
+    return false;
   },
 });
 
