@@ -2,6 +2,7 @@
 
 const Router = require(`express`).Router;
 const router = new Router();
+const passport = require(`../lib/passport`);
 
 const nmcli = require(`../lib/nmcli`);
 
@@ -38,5 +39,28 @@ router.post(`/disconnect`, (req, res) =>
     disconnected: nmcli.disconnect(req.body.iface),
   })
 );
+
+router.post(`/login`, (req, res) => {
+  passport.authenticate(`local`, (err, user) => {
+    if (err) {
+      return res.json({ error: true, message: `Failed to authenticate` });
+    }
+
+    if (!user) {
+      return res.json({ error: true, message: `Username/password mismatch` });
+    }
+
+    return req.login(user, (writeErr) => {
+      if (writeErr) {
+        return res.json({ error: true, message: `Failed to write session` });
+      }
+
+      const newUser = user;
+      delete newUser.password;
+
+      return res.json({ error: false, user: newUser });
+    });
+  })(req, res);
+});
 
 module.exports = router;

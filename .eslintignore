@@ -6,3 +6,4 @@ npm-debug.*
 config/
 build/
 *test*.js
+*.sqlite3
