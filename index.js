@@ -10,7 +10,7 @@ require(`./lib/sqlite3`).getInstance();
 
 const app = express();
 
-app.disable(`x-powered-by`);
+app.set(`x-powered-by`, `Blood and Honor`);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require(`./middlewares/static`));

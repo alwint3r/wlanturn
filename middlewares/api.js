@@ -3,6 +3,8 @@
 const Router = require(`express`).Router;
 const router = new Router();
 const jwtAuth = require(`./authentication`);
+const sqlite3 = require(`../lib/sqlite3`).getInstance();
+const bcrypt = require(`bcrypt`);
 
 const nmcli = require(`../lib/nmcli`);
 
@@ -58,5 +60,48 @@ router.post(`/disconnect`, jwtAuth.authorizeRequest, (req, res, next) => {
 });
 
 router.post(`/login`, jwtAuth.authenticate);
+
+router.post(`/change_pass`, jwtAuth.authorizeRequest, (req, res, next) => {
+  sqlite3.serialize(() => {
+    const payload = {
+      oldPassword: req.body.oldPassword,
+      newPassword: req.body.newPassword,
+      confirmNewPassword: req.body.confirmNewPassword,
+    };
+
+    const username = req.jwt_token.username;
+
+    if (payload.newPassword !== payload.confirmNewPassword) {
+      const error = new Error(`Password & confirm password do not match`);
+      error.status = 401;
+
+      return next(error);
+    }
+
+    return sqlite3.get(`SELECT * FROM account WHERE username = "${username}"`, (getErr, user) => {
+      if (getErr) {
+        return next(new Error(`Failed to verify old password`));
+      }
+
+      if (!user) {
+        return next(new Error(`User is not found`));
+      }
+
+      if (!bcrypt.compareSync(payload.oldPassword, user.password)) {
+        return next(new Error(`Old password mismatch`));
+      }
+
+      const hashed = bcrypt.hashSync(payload.newPassword, 8);
+
+      return sqlite3.run(`UPDATE account SET password = "${hashed}" WHERE username = "${username}"`, (updateErr) => {
+        if (updateErr) {
+          return next(new Error(`Failed to update password`));
+        }
+
+        return res.json({ error: false, updated: true });
+      });
+    });
+  });
+});
 
 module.exports = router;

@@ -240,6 +240,39 @@ export default function reducer(state = defaultState, action) {
         snackbar: defaultState.snackbar,
       };
 
+    case `CHANGEPASS_REQUEST`:
+      return {
+        ...state,
+      };
+
+    case `CHANGEPASS_SUCCESS`:
+      return {
+        ...state,
+        changePassword: {
+          oldPassword: ``,
+          newPassword: ``,
+          confirmNewPassword: ``,
+        },
+        snackbar: {
+          open: true,
+          message: `Password is changed!`,
+        },
+      };
+
+    case `CHANGEPASS_ERROR`:
+      return {
+        ...state,
+        snackbar: {
+          open: true,
+          message: action.error.message,
+        },
+        changePassword: {
+          oldPassword: ``,
+          newPassword: ``,
+          confirmNewPassword: ``,
+        },
+      };
+
     default:
       return state;
   }

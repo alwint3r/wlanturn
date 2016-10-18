@@ -92,6 +92,9 @@ const mapDispatchToProps = dispatch => ({
   onConfirmNewPasswordChange(event) {
     dispatch(actions.changePassFieldChange(`confirmNewPassword`, event.target.value));
   },
+  handleSubmit() {
+    dispatch(actions.changePassword());
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangePasswordDialog);

@@ -173,4 +173,49 @@ export default {
   closeSnackbar: () => ({
     type: `CLOSE_SNACKBAR`,
   }),
+
+  changePassword: () => ({
+    types: [
+      `CHANGEPASS_REQUEST`,
+      `CHANGEPASS_SUCCESS`,
+      `CHANGEPASS_ERROR`,
+    ],
+
+    promiseProducer: (store) => {
+      const { oldPassword, newPassword, confirmNewPassword } = store.getState().changePassword;
+      const body = JSON.stringify({ oldPassword, newPassword, confirmNewPassword });
+
+      if (!oldPassword || !newPassword || !confirmNewPassword) {
+        return Promise.reject({
+          message: `All field must not be empty!`,
+        });
+      }
+
+      if (newPassword !== confirmNewPassword) {
+        return Promise.reject({
+          message: `New password & confirm password do not match`,
+        });
+      }
+
+      return fetch(`/api/change_pass`, {
+        method: `POST`,
+        headers: {
+          'Content-Type': `application/json`,
+          'Accept': `application/json`,
+          'Authorization': `Bearer ${store.getState().jwt}`,
+        },
+        body,
+      })
+      .then(res => res.json())
+      .then((response) => {
+        if (response.error) {
+          return Promise.reject({
+            message: response.message,
+          });
+        }
+
+        return response;
+      });
+    },
+  }),
 };
