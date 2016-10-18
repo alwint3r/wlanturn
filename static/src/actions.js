@@ -102,4 +102,51 @@ export default {
     promiseProducer: () =>
       fetch(`/api/logout`, { method: `POST` }).then(res => res.json()),
   }),
+
+  loginFormFieldChange: (fieldName, value) => ({
+    type: `LOGINFORM_FIELD_CHANGE`,
+    fieldName,
+    value,
+  }),
+
+  loginFormSubmit: () => ({
+    types: [
+      `LOGIN_REQUEST`,
+      `LOGIN_SUCCESS`,
+      `LOGIN_ERROR`,
+    ],
+
+    promiseProducer: (store) => {
+      const { username, password } = store.getState().login;
+      const body = JSON.stringify({ username, password });
+
+      if (!username || !password) {
+        return Promise.reject({
+          message: `Username & password must not be empty!`,
+        });
+      }
+
+      return fetch(`/api/login`, {
+        method: `POST`,
+        headers: {
+          'Content-Type': `application/json`,
+        },
+        body,
+      })
+      .then(res => res.json())
+      .then((response) => {
+        if (response.error) {
+          return Promise.reject({
+            message: response.message,
+          });
+        }
+
+        return response;
+      });
+    },
+  }),
+
+  closeSnackbar: () => ({
+    type: `CLOSE_SNACKBAR`,
+  }),
 };

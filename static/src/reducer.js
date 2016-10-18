@@ -16,6 +16,14 @@ const defaultState = {
   access_points: [],
   active_connections: [],
   loggedIn: false,
+  login: {
+    username: ``,
+    password: ``,
+  },
+  snackbar: {
+    open: false,
+    message: ``,
+  },
 };
 
 export default function reducer(state = defaultState, action) {
@@ -180,6 +188,49 @@ export default function reducer(state = defaultState, action) {
     case `LOGOUT_ERROR`:
       return {
         ...state,
+        snackbar: {
+          open: true,
+          message: action.error.message,
+        },
+      };
+
+    case `LOGIN_REQUEST`:
+      return {
+        ...state,
+      };
+
+    case `LOGIN_SUCCESS`:
+      return {
+        ...state,
+        loggedIn: true,
+        login: {
+          username: ``,
+          password: ``,
+        },
+      };
+
+    case `LOGIN_ERROR`:
+      return {
+        ...state,
+        snackbar: {
+          open: true,
+          message: action.error.message,
+        },
+      };
+
+    case `LOGINFORM_FIELD_CHANGE`:
+      return {
+        ...state,
+        login: {
+          ...state.login,
+          [action.fieldName]: action.value,
+        },
+      };
+
+    case `CLOSE_SNACKBAR`:
+      return {
+        ...state,
+        snackbar: defaultState.snackbar,
       };
 
     default:

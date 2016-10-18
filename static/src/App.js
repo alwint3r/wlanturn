@@ -13,7 +13,7 @@ import ConnectDialog from './ConnectDialog';
 import ChangePasswordDialog from './ChangePasswordDialog';
 import actions from './actions';
 
-const App = props => (
+const App = (props) => (
   <div className="App">
     <AppBar
       title="WLANturn"

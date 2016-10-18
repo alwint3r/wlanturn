@@ -50,7 +50,6 @@ const mapDispatchToProps = dispatch => ({
 
   doRescan() {
     dispatch(actions.rescan());
-    dispatch(actions.getActiveConnections());
   },
 });
 

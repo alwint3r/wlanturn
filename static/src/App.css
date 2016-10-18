@@ -23,3 +23,11 @@ table.connection-info tr td:last-child:before {
   margin-left: 5px;
   margin-right: 5px;
 }
+
+.login-form {
+  margin-top: 12.5%;
+}
+
+.login-form .group {
+  margin-bottom: 20px;
+}

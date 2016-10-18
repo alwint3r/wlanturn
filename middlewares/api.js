@@ -43,15 +43,18 @@ router.post(`/disconnect`, (req, res) =>
 router.post(`/login`, (req, res) => {
   passport.authenticate(`local`, (err, user) => {
     if (err) {
+      res.status(500);
       return res.json({ error: true, message: `Failed to authenticate` });
     }
 
     if (!user) {
+      res.status(401);
       return res.json({ error: true, message: `Username/password mismatch` });
     }
 
     return req.login(user, (writeErr) => {
       if (writeErr) {
+        res.status(500);
         return res.json({ error: true, message: `Failed to write session` });
       }
 
@@ -68,5 +71,9 @@ router.post(`/logout`, (req, res) => {
     res.json({ error: false, message: `Logged out` });
   });
 });
+
+router.get(`/is_authenticated`, (req, res) => (
+  res.json({ authenticated: req.isAuthenticated(), user: req.user })
+));
 
 module.exports = router;

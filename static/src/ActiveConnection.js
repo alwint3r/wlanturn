@@ -76,8 +76,8 @@ const mapDispatchToPrps = dispatch => ({
     };
   },
 
-  rescan(rescan) {
-    if (rescan) {
+  rescan(shouldRescan) {
+    if (shouldRescan) {
       dispatch(actions.getActiveConnections());
       dispatch(actions.rescan());
     }
