@@ -56,7 +56,6 @@ ActiveConnection.propTypes = {
   active_connections: React.PropTypes.arrayOf(React.PropTypes.object),
   getActiveConnections: React.PropTypes.func,
   disconnectIface: React.PropTypes.func,
-  shouldRescan: React.PropTypes.bool,
   rescan: React.PropTypes.func,
 };
 

@@ -5,9 +5,9 @@ import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Router, browserHistory, Route } from 'react-router';
-
+import { persistStore, autoRehydrate } from 'redux-persist';
 import 'flexboxgrid';
 
 import App from './App';
@@ -16,10 +16,9 @@ import './index.css';
 import reducer from './reducer';
 import middlewares from './middlewares';
 
-const store = createStore(
-  reducer,
-  applyMiddleware(...middlewares)
-);
+const createPersistStore = compose(applyMiddleware(...middlewares), autoRehydrate())(createStore);
+const store = createPersistStore(reducer);
+persistStore(store);
 
 injectTapEventPlugin();
 
@@ -35,22 +34,10 @@ const ThemedLogin = () => (
   </MuiThemeProvider>
 );
 
-const authChecking = (nextState, replace, callback) => {
-  fetch(`/api/is_authenticated`)
-    .then(res => res.json())
-    .then((response) => {
-      if (!response.authenticated) {
-        replace(`/login`);
-      }
-
-      callback();
-    });
-};
-
 ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
-      <Route path="/" component={ThemedApp} onEnter={authChecking} />
+      <Route path="/" component={ThemedApp} />
       <Route path="/login" component={ThemedLogin} />
     </Router>
   </Provider>,

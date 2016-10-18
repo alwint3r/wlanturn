@@ -10,8 +10,13 @@ import actions from './actions';
 /* eslint react/jsx-boolean-value:0 */
 
 class Login extends React.Component {
+  componentWillMount() {
+    if (this.props.loggedIn) {
+      this.props.changePage(push(`/`));
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
-    console.log('Receiving', nextProps);
     if (nextProps.loggedIn) {
       this.props.changePage(push(`/`));
     }
@@ -65,11 +70,13 @@ Login.propTypes = {
   onPasswordChange: React.PropTypes.func,
   handleSubmit: React.PropTypes.func,
   changePage: React.PropTypes.func,
+  loggedIn: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   login: state.login,
   loggedIn: state.loggedIn,
+  stateSaved: state.stateSaved,
 });
 
 const mapDispatchToProps = dispatch => ({

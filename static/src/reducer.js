@@ -1,4 +1,3 @@
-
 const defaultState = {
   connectDialogOpen: false,
   changePasswordDialogOpen: false,
@@ -16,6 +15,7 @@ const defaultState = {
   access_points: [],
   active_connections: [],
   loggedIn: false,
+  jwt: ``,
   login: {
     username: ``,
     password: ``,
@@ -174,24 +174,11 @@ export default function reducer(state = defaultState, action) {
         shouldRescan: false,
       };
 
-    case `LOGOUT_REQUEST`:
-      return {
-        ...state,
-      };
-
-    case `LOGOUT_SUCCESS`:
+    case `LOGOUT`:
       return {
         ...state,
         loggedIn: false,
-      };
-
-    case `LOGOUT_ERROR`:
-      return {
-        ...state,
-        snackbar: {
-          open: true,
-          message: action.error.message,
-        },
+        jwt: ``,
       };
 
     case `LOGIN_REQUEST`:
@@ -203,6 +190,7 @@ export default function reducer(state = defaultState, action) {
       return {
         ...state,
         loggedIn: true,
+        jwt: action.result.token,
         login: {
           username: ``,
           password: ``,
@@ -212,6 +200,8 @@ export default function reducer(state = defaultState, action) {
     case `LOGIN_ERROR`:
       return {
         ...state,
+        loggedIn: false,
+        jwt: ``,
         snackbar: {
           open: true,
           message: action.error.message,

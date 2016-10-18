@@ -93,14 +93,7 @@ export default {
   }),
 
   logout: () => ({
-    types: [
-      `LOGOUT_REQUEST`,
-      `LOGOUT_SUCCESS`,
-      `LOGOUT_ERROR`,
-    ],
-
-    promiseProducer: () =>
-      fetch(`/api/logout`, { method: `POST` }).then(res => res.json()),
+    type: `LOGOUT`,
   }),
 
   loginFormFieldChange: (fieldName, value) => ({

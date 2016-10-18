@@ -2,7 +2,7 @@
 
 const Router = require(`express`).Router;
 const router = new Router();
-const passport = require(`../lib/passport`);
+const jwtAuth = require(`./authentication`);
 
 const nmcli = require(`../lib/nmcli`);
 
@@ -40,40 +40,6 @@ router.post(`/disconnect`, (req, res) =>
   })
 );
 
-router.post(`/login`, (req, res) => {
-  passport.authenticate(`local`, (err, user) => {
-    if (err) {
-      res.status(500);
-      return res.json({ error: true, message: `Failed to authenticate` });
-    }
-
-    if (!user) {
-      res.status(401);
-      return res.json({ error: true, message: `Username/password mismatch` });
-    }
-
-    return req.login(user, (writeErr) => {
-      if (writeErr) {
-        res.status(500);
-        return res.json({ error: true, message: `Failed to write session` });
-      }
-
-      const newUser = user;
-      delete newUser.password;
-
-      return res.json({ error: false, user: newUser });
-    });
-  })(req, res);
-});
-
-router.post(`/logout`, (req, res) => {
-  req.session.destroy(() => {
-    res.json({ error: false, message: `Logged out` });
-  });
-});
-
-router.get(`/is_authenticated`, (req, res) => (
-  res.json({ authenticated: req.isAuthenticated(), user: req.user })
-));
+router.post(`/login`, jwtAuth.authenticate);
 
 module.exports = router;
