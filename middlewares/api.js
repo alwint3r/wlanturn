@@ -6,15 +6,21 @@ const jwtAuth = require(`./authentication`);
 
 const nmcli = require(`../lib/nmcli`);
 
-router.get(`/access_points`, (req, res) =>
-  res.json(nmcli.listAp())
-);
+router.get(`/access_points`, jwtAuth.authorizeRequest, (req, res, next) => {
+  nmcli.listAp((err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    return res.json({ error: false, result });
+  });
+});
 
 router.get(`/wireless_devices`, (req, res) =>
   res.json(nmcli.listWirelessDevice())
 );
 
-router.get(`/active_connection/:iface`, (req, res) =>
+router.get(`/active_connection/:iface`, jwtAuth.authorizeRequest, (req, res) =>
  res.json(nmcli.activeConnectionOnIface(req.params.iface))
 );
 
@@ -28,17 +34,28 @@ router.get(`/wifi_active_connections`, (req, res) => {
   });
 });
 
-router.post(`/connect`, (req, res) =>
-  res.json({
-    connected: nmcli.connect(req.body.ssid, req.body.password, req.body.force),
-  })
-);
+router.post(`/connect`, jwtAuth.authorizeRequest, (req, res, next) => {
+  const result = nmcli.connect(
+    req.body.ssid,
+    req.body.password,
+    req.body.force
+  );
 
-router.post(`/disconnect`, (req, res) =>
-  res.json({
-    disconnected: nmcli.disconnect(req.body.iface),
-  })
-);
+  if (!result) {
+    return next(new Error(`Failed to connect to AP. Try force connect & change the password`));
+  }
+
+  return res.json({ error: false, connected: result });
+});
+
+router.post(`/disconnect`, jwtAuth.authorizeRequest, (req, res, next) => {
+  const result = nmcli.disconnect(req.body.iface);
+  if (!result) {
+    return next(new Error(`Failed to disconnect interface ${req.body.iface}`));
+  }
+
+  return res.json({ error: false, disconnected: result });
+});
 
 router.post(`/login`, jwtAuth.authenticate);
 

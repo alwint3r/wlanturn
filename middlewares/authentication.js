@@ -3,23 +3,33 @@
 const jwt = require(`jsonwebtoken`);
 const sqlite3 = require(`../lib/sqlite3`).getInstance();
 const config = require(`../config/`);
+const bcrypt = require(`bcrypt`);
+
+/* eslint no-param-reassign: 0 */
 
 module.exports = {
-  authenticate(req, res) {
+  authenticate(req, res, next) {
     sqlite3.serialize(() => {
       const username = req.body.username;
+      const password = req.body.password;
 
       sqlite3.get(`SELECT * FROM account WHERE username = "${username}"`, (err, user) => {
         if (err) {
-          res.status(500);
-
-          return res.json({ error: true, message: `Failed to authenticate due to internal error` });
+          return next(new Error(`Failed to authenticate due to internal error`));
         }
 
         if (!user) {
-          res.status(401);
+          const error = new Error(`Username/password mismatch`);
+          error.status = 401;
 
-          return res.json({ error: true, message: `Username/password mismatch` });
+          return next(error);
+        }
+
+        if (!bcrypt.compareSync(password, user.password)) {
+          const error = new Error(`Username/password mismatch`);
+          error.status = 401;
+
+          return next(error);
         }
 
         const token = jwt.sign({ username: user.username }, config.jwt.secret, {
@@ -35,37 +45,32 @@ module.exports = {
   },
 
   authorizeRequest(req, res, next) {
-    function sendUnauthorized(response) {
-      response.status(401);
+    function sendUnauthorized() {
+      const error = new Error(`You are not authorized`);
+      error.status = 401;
 
-      return response.json({
-        error: true,
-        message: `You are not authorized`,
-      });
+      return next(error);
     }
 
     const auth = req.headers.authorization ?
       req.headers.authorization.split(` `)[0] : false;
 
     if (!auth || auth !== `Bearer`) {
-      return sendUnauthorized(res);
+      return sendUnauthorized();
     }
 
     const token = req.headers.authorization.split(` `).pop();
 
     if (!token) {
-      return sendUnauthorized(res);
+      return sendUnauthorized();
     }
 
-    return jwt.verify(token, config.jwt.secret, (err) => {
+    return jwt.verify(token, config.jwt.secret, (err, decoded) => {
       if (err) {
-        res.status(401);
-
-        return res.json({
-          error: true,
-          message: `Failed to authorize request`,
-        });
+        return sendUnauthorized();
       }
+
+      req.jwt_token = decoded;
 
       return next();
     });

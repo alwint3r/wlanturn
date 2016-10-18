@@ -10,7 +10,15 @@ import actions from './actions';
 /* eslint react/jsx-boolean-value:0 */
 class AccessPoints extends React.Component {
   componentWillMount() {
-    this.props.doRescan();
+    if (this.props.loggedIn) {
+      this.props.doRescan();
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.loggedIn && nextProps.shouldRescan) {
+      this.props.doRescan();
+    }
   }
 
   render() {
@@ -37,10 +45,13 @@ AccessPoints.propTypes = {
   handleSelection: React.PropTypes.func,
   access_points: React.PropTypes.arrayOf(React.PropTypes.object),
   doRescan: React.PropTypes.func,
+  loggedIn: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   access_points: state.access_points,
+  loggedIn: state.loggedIn,
+  shouldRescan: state.shouldRescan,
 });
 
 const mapDispatchToProps = dispatch => ({

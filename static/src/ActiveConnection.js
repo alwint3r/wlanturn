@@ -12,11 +12,15 @@ import actions from './actions';
 
 class ActiveConnection extends React.Component {
   componentWillMount() {
-    this.props.getActiveConnections();
+    if (this.props.loggedIn) {
+      this.props.getActiveConnections();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.props.rescan(nextProps.shouldRescan);
+    if (nextProps.loggedIn) {
+      this.props.rescan(nextProps.shouldRescan);
+    }
   }
 
   render() {
@@ -57,11 +61,13 @@ ActiveConnection.propTypes = {
   getActiveConnections: React.PropTypes.func,
   disconnectIface: React.PropTypes.func,
   rescan: React.PropTypes.func,
+  loggedIn: React.PropTypes.bool,
 };
 
 const mapStateToProps = state => ({
   active_connections: state.active_connections,
   shouldRescan: state.shouldRescan,
+  loggedIn: state.loggedIn,
 });
 
 const mapDispatchToPrps = dispatch => ({
@@ -78,7 +84,6 @@ const mapDispatchToPrps = dispatch => ({
   rescan(shouldRescan) {
     if (shouldRescan) {
       dispatch(actions.getActiveConnections());
-      dispatch(actions.rescan());
     }
   },
 });

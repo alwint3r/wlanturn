@@ -101,13 +101,13 @@ export default function reducer(state = defaultState, action) {
     case `RESCAN_REQUSET`:
       return {
         ...state,
-        shouldRescan: false,
+        shouldRescan: true,
       };
 
     case `RESCAN_SUCCESS`:
       return {
         ...state,
-        access_points: action.result,
+        access_points: action.result.result || [],
         shouldRescan: false,
       };
     case `RESCAN_ERROR`:
@@ -117,9 +117,10 @@ export default function reducer(state = defaultState, action) {
         shouldRescan: false,
       };
 
-    case `ACTIVECONNECTION_REQUSET`:
+    case `ACTIVECONNECTION_REQUEST`:
       return {
         ...state,
+        shouldRescan: true,
       };
 
     case `ACTIVECONNECTION_SUCCESS`:
@@ -205,6 +206,10 @@ export default function reducer(state = defaultState, action) {
         snackbar: {
           open: true,
           message: action.error.message,
+        },
+        login: {
+          username: ``,
+          password: ``,
         },
       };
 

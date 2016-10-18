@@ -1,3 +1,5 @@
+/* eslint quote-props:0 */
+
 export default {
   toggleConnectDialog: index => ({
     type: `TOGGLE_CONNECT_DIALOG`,
@@ -31,7 +33,23 @@ export default {
       `RESCAN_ERROR`,
     ],
 
-    promiseProducer: () => fetch(`api/access_points`).then(res => res.json()),
+    promiseProducer: (store) => {
+      const token = store.getState().jwt;
+
+      return fetch(`api/access_points`, {
+        method: `GET`,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }).then(res => res.json())
+        .then((response) => {
+          if (response.error) {
+            return Promise.reject({ message: response.message });
+          }
+
+          return Promise.resolve(response);
+        });
+    },
   }),
 
   getActiveConnections: () => ({
@@ -41,7 +59,13 @@ export default {
       `ACTIVECONNECTION_ERROR`,
     ],
 
-    promiseProducer: () => fetch(`api/wifi_active_connections`).then(res => res.json()),
+    promiseProducer: store =>
+      fetch(`api/wifi_active_connections`, {
+        headers: {
+          'Authorization': `Bearer ${store.getState().jwt}`,
+        },
+      })
+      .then(res => res.json()),
   }),
 
   connectWifi: () => ({
@@ -63,6 +87,7 @@ export default {
         method: `POST`,
         headers: {
           'Content-Type': `application/json`,
+          'Authorization': `Bearer ${store.getState().jwt}`,
         },
         body,
       })
@@ -77,7 +102,7 @@ export default {
       `DISCONNECT_ERROR`,
     ],
 
-    promiseProducer: () => {
+    promiseProducer: (store) => {
       const body = JSON.stringify({
         iface,
       });
@@ -86,6 +111,7 @@ export default {
         method: `POST`,
         headers: {
           'Content-Type': `application/json`,
+          'Authorization': `Bearer ${store.getState().jwt}`,
         },
         body,
       }).then(res => res.json());
