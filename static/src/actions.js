@@ -40,6 +40,7 @@ export default {
         method: `GET`,
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Accept': `application/json`,
         },
       }).then(res => res.json())
         .then((response) => {
@@ -63,6 +64,7 @@ export default {
       fetch(`api/wifi_active_connections`, {
         headers: {
           'Authorization': `Bearer ${store.getState().jwt}`,
+          'Accept': `application/json`,
         },
       })
       .then(res => res.json()),
@@ -88,6 +90,7 @@ export default {
         headers: {
           'Content-Type': `application/json`,
           'Authorization': `Bearer ${store.getState().jwt}`,
+          'Accept': `application/json`,
         },
         body,
       })
@@ -112,6 +115,7 @@ export default {
         headers: {
           'Content-Type': `application/json`,
           'Authorization': `Bearer ${store.getState().jwt}`,
+          'Accept': `application/json`,
         },
         body,
       }).then(res => res.json());
@@ -149,6 +153,7 @@ export default {
         method: `POST`,
         headers: {
           'Content-Type': `application/json`,
+          'Accept': `application/json`,
         },
         body,
       })

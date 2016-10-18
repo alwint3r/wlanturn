@@ -4,6 +4,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
+import Snackbar from 'material-ui/Snackbar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -66,6 +67,12 @@ class App extends React.Component {
 
         <ConnectDialog open={this.props.connectDialogOpen} />
         <ChangePasswordDialog open={this.props.changePasswordDialogOpen} />
+        <Snackbar
+          open={this.props.snackbarOpen}
+          message={this.props.snackbarMsg}
+          onRequestClose={this.props.snackbarClose}
+          autoHideDuration={1000}
+        />
       </div>
     );
   }
@@ -78,12 +85,17 @@ App.propTypes = {
   loggedIn: React.PropTypes.bool,
   logout: React.PropTypes.func,
   login: React.PropTypes.func,
+  snackbarOpen: React.PropTypes.bool,
+  snackbarMsg: React.PropTypes.string,
+  snackbarClose: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   connectDialogOpen: state.connectDialogOpen,
   changePasswordDialogOpen: state.changePasswordDialogOpen,
   loggedIn: state.loggedIn,
+  snackbarMsg: state.snackbar.message,
+  snackbarOpen: state.snackbar.open,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -97,6 +109,10 @@ const mapDispatchToProps = dispatch => ({
 
   login() {
     dispatch(push(`/login`));
+  },
+
+  snackbarClose() {
+    dispatch(actions.closeSnackbar());
   },
 });
 

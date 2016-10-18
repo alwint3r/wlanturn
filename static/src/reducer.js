@@ -150,12 +150,20 @@ export default function reducer(state = defaultState, action) {
         connectDialogOpen: false,
         connect: defaultState.connect,
         shouldRescan: true,
+        snackbar: {
+          open: true,
+          message: `Connected!`,
+        },
       };
 
     case `CONNECTWIFI_ERROR`:
       return {
         ...state,
         shouldRescan: false,
+        snackbar: {
+          open: true,
+          message: action.error.message,
+        },
       };
 
     case `DISCONNECT_REQUEST`:
@@ -167,6 +175,10 @@ export default function reducer(state = defaultState, action) {
       return {
         ...state,
         shouldRescan: true,
+        snackbar: {
+          message: `Disconnected!`,
+          open: true,
+        },
       };
 
     case `DISCONNECT_ERROR`:

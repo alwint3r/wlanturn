@@ -2,6 +2,7 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import Snackbar from 'material-ui/Snackbar';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 
@@ -59,6 +60,13 @@ class Login extends React.Component {
             </div>
           </Paper>
         </div>
+
+        <Snackbar
+          open={this.props.snackbarOpen}
+          message={this.props.snackbarMsg}
+          onRequestClose={this.props.snackbarClose}
+          autoHideDuration={1000}
+        />
       </div>
     );
   }
@@ -71,12 +79,17 @@ Login.propTypes = {
   handleSubmit: React.PropTypes.func,
   changePage: React.PropTypes.func,
   loggedIn: React.PropTypes.bool,
+  snackbarOpen: React.PropTypes.bool,
+  snackbarMsg: React.PropTypes.string,
+  snackbarClose: React.PropTypes.func,
 };
 
 const mapStateToProps = state => ({
   login: state.login,
   loggedIn: state.loggedIn,
   stateSaved: state.stateSaved,
+  snackbarMsg: state.snackbar.message,
+  snackbarOpen: state.snackbar.open,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -94,6 +107,10 @@ const mapDispatchToProps = dispatch => ({
 
   changePage(pageEvent) {
     dispatch(pageEvent);
+  },
+
+  snackbarClose() {
+    dispatch(actions.closeSnackbar());
   },
 });
 
