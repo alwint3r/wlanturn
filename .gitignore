@@ -2,6 +2,6 @@ node_modules
 npm-debug.*
 *.log
 
+config/*
 !config/index.js
-config/
 *.sqlite3
