@@ -27,6 +27,18 @@ const defaultState = {
 };
 
 export default function reducer(state = defaultState, action) {
+  if (action.error && action.error.status === 401) {
+    return {
+      ...state,
+      snackbar: {
+        open: true,
+        message: `Your token has expired. Please log in`,
+      },
+      loggedIn: false,
+      jwt: ``,
+      shouldRescan: false,
+    };
+  }
   switch (action.type) {
     case `TOGGLE_CONNECT_DIALOG`:
       if (state.connectDialogOpen) {

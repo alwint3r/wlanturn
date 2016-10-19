@@ -23,7 +23,7 @@ router.get(`/wireless_devices`, (req, res) =>
   res.json(nmcli.listWirelessDevice())
 );
 
-router.get(`/wifi_active_connections`, (req, res, next) => {
+router.get(`/wifi_active_connections`, jwtAuth.authorizeRequest, (req, res, next) => {
   const devices = nmcli.listWirelessDevice()
     .filter(dev => dev.state === `connected`)
     .map(dev => dev.device);

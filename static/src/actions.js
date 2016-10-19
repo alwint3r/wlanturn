@@ -42,14 +42,17 @@ export default {
           'Authorization': `Bearer ${token}`,
           'Accept': `application/json`,
         },
-      }).then(res => res.json())
-        .then((response) => {
-          if (response.error) {
-            return Promise.reject({ message: response.message });
-          }
+      }).then((res) => {
+        if (!res.ok) {
+          return res.json().then(json =>
+            Promise.reject({
+              message: json.message,
+              status: res.status,
+            }));
+        }
 
-          return Promise.resolve(response);
-        });
+        return res.json();
+      });
     },
   }),
 
@@ -67,7 +70,17 @@ export default {
           'Accept': `application/json`,
         },
       })
-      .then(res => res.json()),
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then(json =>
+            Promise.reject({
+              message: json.message,
+              status: res.status,
+            }));
+        }
+
+        return res.json();
+      }),
   }),
 
   connectWifi: () => ({
@@ -94,7 +107,17 @@ export default {
         },
         body,
       })
-      .then(res => res.json());
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then(json =>
+            Promise.reject({
+              message: json.message,
+              status: res.status,
+            }));
+        }
+
+        return res.json();
+      });
     },
   }),
 
@@ -118,7 +141,18 @@ export default {
           'Accept': `application/json`,
         },
         body,
-      }).then(res => res.json());
+      })
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then(json =>
+            Promise.reject({
+              message: json.message,
+              status: res.status,
+            }));
+        }
+
+        return res.json();
+      });
     },
   }),
 
@@ -157,15 +191,16 @@ export default {
         },
         body,
       })
-      .then(res => res.json())
-      .then((response) => {
-        if (response.error) {
-          return Promise.reject({
-            message: response.message,
-          });
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then(json =>
+            Promise.reject({
+              message: json.message,
+              status: res.status,
+            }));
         }
 
-        return response;
+        return res.json();
       });
     },
   }),
@@ -206,15 +241,16 @@ export default {
         },
         body,
       })
-      .then(res => res.json())
-      .then((response) => {
-        if (response.error) {
-          return Promise.reject({
-            message: response.message,
-          });
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then(json =>
+            Promise.reject({
+              message: json.message,
+              status: res.status,
+            }));
         }
 
-        return response;
+        return res.json();
       });
     },
   }),
