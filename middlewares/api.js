@@ -1,5 +1,6 @@
 'use strict';
 
+const async = require(`async`);
 const Router = require(`express`).Router;
 const router = new Router();
 const jwtAuth = require(`./authentication`);
@@ -22,41 +23,45 @@ router.get(`/wireless_devices`, (req, res) =>
   res.json(nmcli.listWirelessDevice())
 );
 
-router.get(`/active_connection/:iface`, jwtAuth.authorizeRequest, (req, res) =>
- res.json(nmcli.activeConnectionOnIface(req.params.iface))
-);
-
-router.get(`/wifi_active_connections`, (req, res) => {
+router.get(`/wifi_active_connections`, (req, res, next) => {
   const devices = nmcli.listWirelessDevice()
     .filter(dev => dev.state === `connected`)
     .map(dev => dev.device);
 
-  return res.json({
-    active_connections: devices.map(dev => nmcli.activeConnectionOnIface(dev)),
+  async.map(devices, (device, done) => {
+    nmcli.activeConnectionOnIface(device, (err, connection) => {
+      if (err) return done(err);
+      return done(null, connection);
+    });
+  },
+
+  (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    return res.json({ active_connections: result });
   });
 });
 
 router.post(`/connect`, jwtAuth.authorizeRequest, (req, res, next) => {
-  const result = nmcli.connect(
-    req.body.ssid,
-    req.body.password,
-    req.body.force
-  );
+  nmcli.connect(req.body.ssid, req.body.password, req.body.force, (err) => {
+    if (err) {
+      return next(new Error(`Failed to connect to AP. Try force connect & change the password`));
+    }
 
-  if (!result) {
-    return next(new Error(`Failed to connect to AP. Try force connect & change the password`));
-  }
-
-  return res.json({ error: false, connected: result });
+    return res.json({ error: false, connected: true });
+  });
 });
 
 router.post(`/disconnect`, jwtAuth.authorizeRequest, (req, res, next) => {
-  const result = nmcli.disconnect(req.body.iface);
-  if (!result) {
-    return next(new Error(`Failed to disconnect interface ${req.body.iface}`));
-  }
+  nmcli.disconnect(req.body.iface, (err) => {
+    if (err) {
+      return next(new Error(`Failed to disconnect interface ${req.body.iface}`));
+    }
 
-  return res.json({ error: false, disconnected: result });
+    return res.json({ error: false, disconnected: true });
+  });
 });
 
 router.post(`/login`, jwtAuth.authenticate);
