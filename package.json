@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint",
     "start": "nf start",
-    "postinstall": "cd static && npm install && npm run build"
+    "postinstall": "cd static && npm install && npm run build",
+    "build": "cd static && npm run build"
   },
   "author": "Alwin Arrasyid <alwin.ridd@gmail.com>",
   "license": "MIT",
